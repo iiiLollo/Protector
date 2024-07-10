@@ -9,8 +9,16 @@
 ## Features
 
 This mod can be used to allow only known player to access an otherwhise open server. 
-
 If not present, the mod will create the configuration files on startup
+
+The mod will check if a connecting user steamID is in the whitelist file, if not, it will prevent the user from accessing the server.
+Additionally, is possible to add/remove users from the whitelist file while the server is running.
+If the option "GateKeeperKickPlayer" as been enabled, the mod will kick any user from the server that has been removed from the whitelist.
+
+The whitelist file can be reloaded on a live server in multiple ways:
+- GateKeeperFileWatcherEnabled will enable a file whatcher what will reload the file on change (this doesn't work on Wine installations).
+- GateKeeperUpdateEnabled will enable a time based reload of the file.
+- Using the ".Protector reload" command, an Admin user can ask the mod to reload the list.
 
 ## Commands
 
