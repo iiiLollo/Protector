@@ -4,15 +4,11 @@ using ProjectM;
 using ProjectM.Network;
 using ProjectM.Physics;
 using Protector.Helpers;
-using Steamworks;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Services.Authentication.Internal;
 using UnityEngine;
 
 namespace Protector.Services;
@@ -21,13 +17,14 @@ internal class GateKeeperService
 
 
     private List<ulong> OldWhitelisted;
-    private List<ulong> Whitelisted;
+    private List<ulong> Whitelisted { get; set; }
 
     private FileSystemWatcher fileWatcher;
 
     readonly IgnorePhysicsDebugSystem tokenMonoBehaviour;
 
-    
+    public const int MAX_REPLY_LENGTH = 509;
+
 
     public static ManualLogSource Log => Plugin.LogInstance;
 
@@ -51,6 +48,8 @@ internal class GateKeeperService
         }
     }
 
+    
+
     // Background process to do some stuff periodically
     static IEnumerator UpdateLoop()
     {
@@ -59,6 +58,10 @@ internal class GateKeeperService
         while (true)
         {
             yield return waitForSeconds;
+#if DEBUG
+            Log.LogInfo($"Triggered time based reload.");
+#endif
+            Whitelist.NeedsReload = true;
 
 
         }
@@ -153,12 +156,22 @@ internal class GateKeeperService
 #if DEBUG
             Log.LogInfo($"Whitelist file has changed!");
 #endif
-            Whitelist.NeedsReload=true;
+           this.MarkForReload();
 
 
         };
 
         fileWatcher.EnableRaisingEvents = true;
+    }
+
+    public List<ulong> getWhitelisted()
+    {
+        return new List<ulong>(this.Whitelisted);
+    }
+
+    public void MarkForReload()
+    {
+        Whitelist.NeedsReload = true;
     }
 
 }

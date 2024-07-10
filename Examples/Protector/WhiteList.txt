@@ -1,0 +1,12 @@
+#
+# Edit this file to add or remove player from the whitelist.
+#
+# If you have enabled HotReload in configuration file, it'll be automatically reloaded
+# without needing server restart. And if you use KickPlayer option, removed SteamID will
+# be automatically kicked out the server if connected.
+#
+# You can use comments in this file with # character, but be aware, you cannot put a
+# comment on the same line of an SteamID or it'll be skipped by the plugin.
+#
+# 10101010101010101
+#
