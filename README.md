@@ -9,6 +9,7 @@
 ## Features
 
 This mod can be used to allow only known player to access an otherwhise open server. 
+
 If not present, the mod will create the configuration files on startup
 
 ## Commands
