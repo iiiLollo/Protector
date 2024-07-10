@@ -21,33 +21,6 @@ If not present, the mod will create the configuration files on startup
  
 ## Configuration
 
-## Enable or disable hot monitor of configuration file.
-# Setting type: Boolean
-# Default value: true
-GateKeeperFileWatcherEnabled = true
-
-## Delay for background processor in minutes.
-# Setting type: Int32
-# Default value: 9999
-GateKeeperUpdateInterval = 9999
-
-## Enable background processor.
-# Setting type: Boolean
-# Default value: false
-GateKeeperUpdateEnabled = false
-
-## Enable kick for not whitelisted players.
-# Setting type: Boolean
-# Default value: false
-GateKeeperKickPlayer = true
-
-## Path to the WhiteList file.
-# Setting type: String
-# Default value: C:\Program Files (x86)\Steam\steamapps\common\VRisingDedicatedServer\BepInEx\config\Protector\WhiteList.txt
-GateKeeperWhitelistFile = C:\Program Files (x86)\Steam\steamapps\common\VRisingDedicatedServer\BepInEx\config\Protector\WhiteList.txt
-
-
-
 ### Main configuration file 
 The main configuration file is the following: BepInEx\config\Protector.cfg
 
@@ -62,6 +35,9 @@ The main configuration file is the following: BepInEx\config\Protector.cfg
 - **Kick Player**: `GateKeeperKickPlayer` (bool, default: false) 
   If set to true, players removed from the whitelist will be kicked from the server
   
+### Whitelist configuration file 
+The default location for the Whitelis file is main configuration file is \BepInEx\config\Protector\WhiteList.txt
+Add all Whitelisted steamID to this file.
 
 
 ## Acknowledgments
