@@ -42,16 +42,20 @@ internal class GateKeeperService
         if (Plugin.GateKeeperFileWatcherEnabled.Value)
         {
             initializeFileWatcher();
-            tokenMonoBehaviour.StartCoroutine(KickLoop().WrapToIl2Cpp());
             Log.LogInfo($"GateKeeper background filewatcher started");
-
         }
+
+        tokenMonoBehaviour.StartCoroutine(KickLoop().WrapToIl2Cpp());
+        Log.LogInfo($"GateKeeper background Whitelist monitor started");
+
+
+
     }
 
-    
+
 
     // Background process to do some stuff periodically
-    static IEnumerator UpdateLoop()
+    private IEnumerator UpdateLoop()
     {
         WaitForSeconds waitForSeconds = new(Plugin.GateKeeperUpdateInterval.Value * 60); // Convert minutes to seconds for update loop
 
@@ -61,7 +65,7 @@ internal class GateKeeperService
 #if DEBUG
             Log.LogInfo($"Triggered time based reload.");
 #endif
-            Whitelist.NeedsReload = true;
+            this.MarkForReload();
 
 
         }
@@ -80,7 +84,7 @@ internal class GateKeeperService
                 OldWhitelisted = (List<ulong>)result[1];
                 KickUsers(OldWhitelisted);
             }
-            
+
             yield return 0;
         }
     }
@@ -92,26 +96,26 @@ internal class GateKeeperService
     /// <param name="oldWhitelisted">The list containing all old whitelisted SteamIDs.</param>
     public static void KickUsers(List<ulong> oldWhitelisted)
     {
-        
-            if (!Plugin.GateKeeperKickPlayer.Value || oldWhitelisted == null || oldWhitelisted.Count == 0)
-            {
-                return;
-            }
-            
 
-            Unity.Entities.EntityManager WorldEntityManager = Core.Server.EntityManager;
-            var query = WorldEntityManager.CreateEntityQuery(ComponentType.ReadOnly<User>());
-            var entities = query.ToEntityArray(Allocator.Temp);
+        if (!Plugin.GateKeeperKickPlayer.Value || oldWhitelisted == null || oldWhitelisted.Count == 0)
+        {
+            return;
+        }
 
-            foreach (var steamId in oldWhitelisted)
-                if (!Whitelist.Get().Contains(steamId))
-                    foreach (var entity in entities)
-                    {
-                        var user = WorldEntityManager.GetComponentData<User>(entity);
-                        if (user.PlatformId != steamId || !user.IsConnected) continue;
-                        KickUser(steamId);
-                    }
-                
+
+        Unity.Entities.EntityManager WorldEntityManager = Core.Server.EntityManager;
+        var query = WorldEntityManager.CreateEntityQuery(ComponentType.ReadOnly<User>());
+        var entities = query.ToEntityArray(Allocator.Temp);
+
+        foreach (var steamId in oldWhitelisted)
+            if (!Whitelist.Get().Contains(steamId))
+                foreach (var entity in entities)
+                {
+                    var user = WorldEntityManager.GetComponentData<User>(entity);
+                    if (user.PlatformId != steamId || !user.IsConnected) continue;
+                    KickUser(steamId);
+                }
+
     }
 
     public void LoadLists()
@@ -137,7 +141,7 @@ internal class GateKeeperService
     private static void KickUser(ulong playerId)
     {
         ServerBootstrapSystem serverBootstrap = Core.Server.GetExistingSystemManaged<ServerBootstrapSystem>();
-        serverBootstrap.Kick(playerId, Stunlock.Network.ConnectionStatusChangeReason.BlockedUserOnServer,true);
+        serverBootstrap.Kick(playerId, Stunlock.Network.ConnectionStatusChangeReason.BlockedUserOnServer, true);
         Log.LogInfo($"[{playerId}] was kicked because it was removed from the whitelist.");
     }
 
@@ -156,7 +160,7 @@ internal class GateKeeperService
 #if DEBUG
             Log.LogInfo($"Whitelist file has changed!");
 #endif
-           this.MarkForReload();
+            this.MarkForReload();
 
 
         };
