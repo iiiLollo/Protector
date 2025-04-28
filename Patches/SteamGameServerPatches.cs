@@ -1,7 +1,7 @@
 using HarmonyLib;
 using Protector.Services;
 using Steamworks;
-using Unity.Services.Authentication.Internal;
+
 
 namespace Protector.Patches;
 
