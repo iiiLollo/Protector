@@ -4,7 +4,6 @@ using ProjectM.Scripting;
 using Protector.Helpers;
 using Protector.Services;
 using Unity.Entities;
-using VampireCommandFramework;
 
 namespace Protector;
 
@@ -29,8 +28,7 @@ internal static class Core
 
         ServerScriptMapper = Server.GetExistingSystemManaged<ServerScriptMapper>();
         PrefabCollectionSystem = Server.GetExistingSystemManaged<PrefabCollectionSystem>();
-        CommandRegistry.RegisterAll();
-
+      
         // Initialize utility services
         Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME}[{MyPluginInfo.PLUGIN_VERSION}] core initialized!");
 

@@ -3,7 +3,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>Protector</AssemblyName>
     <Description>Whitelist mod</Description>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RootNamespace>Protector</RootNamespace>
