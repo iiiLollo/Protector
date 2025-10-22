@@ -53,6 +53,7 @@ public static class Whitelist
         builder.AppendLine("#");
 
         File.WriteAllText(confFile, builder.ToString());
+        
     }
 
     /// <summary>

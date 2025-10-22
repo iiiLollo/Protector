@@ -1,15 +1,17 @@
 ﻿using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using ProjectM;
+using Il2CppInterop.Runtime;
 using ProjectM.Network;
 using ProjectM.Physics;
 using Protector.Helpers;
+using Stunlock.Network;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
+
 
 namespace Protector.Services;
 internal class GateKeeperService
@@ -112,8 +114,7 @@ internal class GateKeeperService
                 foreach (var entity in entities)
                 {
                     var user = WorldEntityManager.GetComponentData<User>(entity);
-                    if (user.PlatformId != steamId || !user.IsConnected) continue;
-                    KickUser(steamId);
+                    KickUser(user);
                 }
 
     }
@@ -126,7 +127,7 @@ internal class GateKeeperService
 
     }
 
-    public bool IsUserEnabled(ulong playerId)
+    public bool IsUserEnabled(System.UInt64 playerId)
     {
         if (Whitelisted.Contains(playerId))
         {
@@ -135,16 +136,45 @@ internal class GateKeeperService
 #endif
             return true;
         }
+        else
+        {
+#if DEBUG
+            Log.LogInfo($"[{playerId}] is not whitelisted.");
+#endif
+
+        }
         return false;
     }
 
-    private static void KickUser(ulong playerId)
+
+    public static void KickUser(User user)
     {
-        ServerBootstrapSystem serverBootstrap = Core.Server.GetExistingSystemManaged<ServerBootstrapSystem>();
-        serverBootstrap.Kick(playerId, Stunlock.Network.ConnectionStatusChangeReason.BlockedUserOnServer, true);
-        Log.LogInfo($"[{playerId}] was kicked because it was removed from the whitelist.");
+        EntityManager entityManager = Core.EntityManager;
+        Entity entity = entityManager.CreateEntity(new ComponentType[3]
+        {
+      ComponentType.ReadOnly<NetworkEventType>(),
+      ComponentType.ReadOnly<SendEventToUser>(),
+      ComponentType.ReadOnly<KickEvent>()
+        });
+        StreamingServices.Write<KickEvent>(entity, new KickEvent()
+        {
+            PlatformId = user.PlatformId
+        });
+        StreamingServices.Write<SendEventToUser>(entity, new SendEventToUser()
+        {
+            UserIndex = user.Index
+        });
+        StreamingServices.Write<NetworkEventType>(entity, new NetworkEventType()
+        {
+            EventId = NetworkEvents.EventId_KickEvent,
+            IsAdminEvent = false,
+            IsDebugEvent = false
+        });
     }
 
+ 
+
+   
 
     private void initializeFileWatcher()
     {

@@ -3,7 +3,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>Protector</AssemblyName>
     <Description>Whitelist mod</Description>
-    <Version>0.2.1</Version>
+    <Version>0.2.2</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RootNamespace>Protector</RootNamespace>
@@ -15,6 +15,7 @@
     <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.691" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.Core" Version="6.0.0-be.691" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+    <PackageReference Include="VRising.VampireCommandFramework" Version="0.10.*" />
   </ItemGroup>
     <ItemGroup>
     <Reference Include="Backtrace.Unity" HintPath="..\interop\Backtrace.Unity.dll" />
@@ -177,10 +178,7 @@
     <Reference Include="UnityEngine.XRModule" HintPath="..\interop\UnityEngine.XRModule.dll" />
     <Reference Include="VivoxUnity" HintPath="..\interop\VivoxUnity.dll" />
     <Reference Include="__Generated" HintPath="..\interop\__Generated.dll" />
-	    <Reference Include="VampireCommandFramework">
-      <HintPath>..\..\Program Files (x86)\Steam\steamapps\common\VRisingDedicatedServer\BepInEx\plugins\VampireCommandFramework.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+	  </ItemGroup>
   <PropertyGroup>
     <NoWarn>NU1605</NoWarn>
   </PropertyGroup>
