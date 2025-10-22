@@ -48,7 +48,7 @@ internal static class Core
         return null;
     }
 
-    internal static bool IsUserEnabled(ulong m_SteamID)
+    internal static bool IsUserEnabled(System.UInt64 m_SteamID)
     {
 #if DEBUG
         Log.LogInfo($"New user logging in SteamID:{m_SteamID}");
